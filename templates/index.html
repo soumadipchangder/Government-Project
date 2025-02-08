@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Details Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Enter Academic Details</h2>
+        <form id="studentForm">
+            <input type="text" id="name" placeholder="Name" required><br>
+            <input type="text" id="class" placeholder="Class" required><br>
+            <input type="text" id="section" placeholder="Section" required><br>
+            <input type="text" id="stream" placeholder="Stream" required><br>
+            <input type="text" id="enrollment_no" placeholder="Enrollment No" required><br>
+            <button type="button" onclick="submitData()">Submit</button>
+        </form>
+
+        <!-- Admin Access Button (Redirects to Admin Page) -->
+        <a href="/admin"><button id="adminBtn">Admin Access</button></a>
+    </div>
+
+    <script>
+        function submitData() {
+            const data = {
+                name: document.getElementById("name").value,
+                class: document.getElementById("class").value,
+                section: document.getElementById("section").value,
+                stream: document.getElementById("stream").value,
+                enrollment_no: document.getElementById("enrollment_no").value
+            };
+
+            fetch('/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                if (data.clearForm) {
+                    document.getElementById("studentForm").reset();  // Properly clears form after submission
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
